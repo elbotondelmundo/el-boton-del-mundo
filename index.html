@@ -146,8 +146,9 @@ async function supabaseRequest(functionName) {
   );
 
   if (!response.ok) {
-    throw new Error("Error de conexión: " + response.status);
-  }
+    const errorText = await response.text();
+    throw new Error("Error " + response.status + ": " + errorText);
+}
 
   return await response.json();
 }
