@@ -134,8 +134,9 @@ const statusText = document.getElementById("status");
 async function supabaseRequest(functionName) {
   const response = await fetch(
     `${SUPABASE_URL}/rest/v1/rpc/${functionName}`,
-    {
-      method: "POST",
+{
+  method: "POST",
+  signal: AbortSignal.timeout(10000),
       headers: {
         "Content-Type": "application/json",
         "apikey": SUPABASE_KEY,
