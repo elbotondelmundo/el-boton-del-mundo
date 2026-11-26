@@ -1,0 +1,157 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Botón del Mundo</title>
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(circle at center, #260008, #080808 65%);
+  color: white;
+  font-family: Arial, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+}
+
+main { width: 100%; max-width: 480px; }
+
+.tag {
+  color: #ff5362;
+  letter-spacing: 4px;
+  font-size: 11px;
+}
+
+h1 {
+  font-size: 36px;
+  letter-spacing: 3px;
+  margin: 25px 0 12px;
+}
+
+.subtitle {
+  color: #aaa;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+#button {
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  border: 7px solid #ff5260;
+  background: radial-gradient(circle at 35% 30%, #ff4555, #920016 75%);
+  color: white;
+  font-size: 19px;
+  font-weight: bold;
+  margin: 55px auto 35px;
+  display: block;
+  cursor: pointer;
+  box-shadow: 0 0 25px #ff001f, 0 0 65px #b00020;
+  transition: transform .15s, box-shadow .2s;
+}
+
+#button:active {
+  transform: scale(.92);
+  box-shadow: 0 0 12px #ff001f;
+}
+
+.counter {
+  font-size: 36px;
+  letter-spacing: 5px;
+  font-weight: bold;
+}
+
+.label {
+  color: #999;
+  font-size: 11px;
+  letter-spacing: 3px;
+  margin-top: 8px;
+}
+
+#message {
+  margin: 35px auto 20px;
+  padding: 20px;
+  border: 1px solid #51202a;
+  border-radius: 12px;
+  color: #ff9ba5;
+  line-height: 1.6;
+  min-height: 85px;
+}
+
+footer {
+  color: #666;
+  font-size: 11px;
+  margin-top: 35px;
+}
+</style>
+</head>
+
+<body>
+<main>
+  <div class="tag">EXPERIMENTO MUNDIAL Nº 001</div>
+
+  <h1>EL BOTÓN<br>DEL MUNDO</h1>
+
+  <p class="subtitle">
+    Nadie sabe qué sucede después de pulsarlo.<br>
+    ¿Te atreves a descubrirlo?
+  </p>
+
+  <button id="button" onclick="pressButton()">
+    PÚLSAME
+  </button>
+
+  <div class="counter" id="counter">000000</div>
+  <div class="label">TUS PULSACIONES EN ESTE DISPOSITIVO</div>
+
+  <div id="message">
+    El mundo está esperando.<br>
+    El primer movimiento depende de ti.
+  </div>
+
+  <footer>
+    UN MUNDO. UN BOTÓN. MILLONES DE POSIBILIDADES.
+  </footer>
+</main>
+
+<script>
+const messages = [
+  "Alguien, en algún lugar, también ha pulsado.",
+  "No todos los secretos deben descubrirse.",
+  "El mundo acaba de cambiar un poquito.",
+  "La próxima pulsación podría ser importante.",
+  "Hay algo que todavía no te hemos contado.",
+  "¿Volverás mañana?",
+  "El experimento acaba de comenzar."
+];
+
+let total = Number(localStorage.getItem("pulsaciones") || 0);
+
+function updateCounter() {
+  document.getElementById("counter").textContent =
+    String(total).padStart(6, "0");
+}
+
+function pressButton() {
+  total++;
+  localStorage.setItem("pulsaciones", total);
+
+  const randomMessage =
+    messages[Math.floor(Math.random() * messages.length)];
+
+  document.getElementById("message").textContent = randomMessage;
+
+  updateCounter();
+}
+
+updateCounter();
+</script>
+</body>
+</html>
