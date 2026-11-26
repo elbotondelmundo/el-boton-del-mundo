@@ -7,151 +7,180 @@
 <title>El Botón del Mundo</title>
 <style>
 * { box-sizing: border-box; }
-
 body {
   margin: 0;
   min-height: 100vh;
-  background: radial-gradient(circle at center, #260008, #080808 65%);
-  color: white;
-  font-family: Arial, sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: radial-gradient(circle, #252525, #080808 70%);
+  color: white;
+  font-family: Arial, sans-serif;
   text-align: center;
   padding: 20px;
 }
-
-main { width: 100%; max-width: 480px; }
-
-.tag {
-  color: #ff5362;
-  letter-spacing: 4px;
-  font-size: 11px;
-}
-
-h1 {
-  font-size: 36px;
-  letter-spacing: 3px;
-  margin: 25px 0 12px;
-}
-
-.subtitle {
-  color: #aaa;
-  font-size: 15px;
-  line-height: 1.6;
-}
-
-#button {
-  width: 170px;
-  height: 170px;
-  border-radius: 50%;
-  border: 7px solid #ff5260;
-  background: radial-gradient(circle at 35% 30%, #ff4555, #920016 75%);
-  color: white;
-  font-size: 19px;
-  font-weight: bold;
-  margin: 55px auto 35px;
-  display: block;
-  cursor: pointer;
-  box-shadow: 0 0 25px #ff001f, 0 0 65px #b00020;
-  transition: transform .15s, box-shadow .2s;
-}
-
-#button:active {
-  transform: scale(.92);
-  box-shadow: 0 0 12px #ff001f;
-}
-
+main { max-width: 500px; width: 100%; }
+h1 { font-size: 36px; letter-spacing: 2px; }
+p { color: #aaa; line-height: 1.6; }
 .counter {
-  font-size: 36px;
-  letter-spacing: 5px;
+  font-size: 48px;
   font-weight: bold;
+  margin: 30px 0;
+  color: #fff;
 }
-
-.label {
-  color: #999;
-  font-size: 11px;
-  letter-spacing: 3px;
-  margin-top: 8px;
+button {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  border: 9px solid #710000;
+  background: radial-gradient(circle at 35% 30%, #ff5555, #d00000 60%, #710000);
+  color: white;
+  font-size: 27px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0 35px #e0000055, inset 0 0 20px #ff999955;
 }
-
-#message {
-  margin: 35px auto 20px;
-  padding: 20px;
-  border: 1px solid #51202a;
-  border-radius: 12px;
-  color: #ff9ba5;
-  line-height: 1.6;
-  min-height: 85px;
-}
-
-footer {
-  color: #666;
-  font-size: 11px;
-  margin-top: 35px;
-}
+button:active { transform: scale(.96); }
+button:disabled { opacity: .6; cursor: wait; }
+#status { min-height: 28px; margin-top: 25px; }
+footer { margin-top: 45px; color: #666; font-size: 12px; }
 </style>
 </head>
-
 <body>
 <main>
-  <div class="tag">EXPERIMENTO MUNDIAL Nº 001</div>
+  <h1>EL BOTÓN DEL MUNDO</h1>
+  <p>Un botón. Un mundo.<br>¿Cuántas veces será pulsado?</p>
 
-  <h1>EL BOTÓN<br>DEL MUNDO</h1>
+  <div class="counter" id="counter">...</div>
+  <p>PULSACIONES MUNDIALES</p>
 
-  <p class="subtitle">
-    Nadie sabe qué sucede después de pulsarlo.<br>
-    ¿Te atreves a descubrirlo?
-  </p>
+  <button id="worldButton">PULSAR</button>
 
-  <button id="button" onclick="pressButton()">
-    PÚLSAME
-  </button>
-
-  <div class="counter" id="counter">000000</div>
-  <div class="label">TUS PULSACIONES EN ESTE DISPOSITIVO</div>
-
-  <div id="message">
-    El mundo está esperando.<br>
-    El primer movimiento depende de ti.
-  </div>
-
-  <footer>
-    UN MUNDO. UN BOTÓN. MILLONES DE POSIBILIDADES.
-  </footer>
+  <p id="status">Conectando con el mundo...</p>
+  <footer>UNA PULSACIÓN PUEDE CAMBIARLO TODO</footer>
 </main>
 
 <script>
-const messages = [
-  "Alguien, en algún lugar, también ha pulsado.",
-  "No todos los secretos deben descubrirse.",
-  "El mundo acaba de cambiar un poquito.",
-  "La próxima pulsación podría ser importante.",
-  "Hay algo que todavía no te hemos contado.",
-  "¿Volverás mañana?",
-  "El experimento acaba de comenzar."
-];
+const SUPABASE_URL = "
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Botón del Mundo</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle, #252525, #080808 70%);
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 20px;
+}
+main { max-width: 500px; width: 100%; }
+h1 { font-size: 36px; letter-spacing: 2px; }
+p { color: #aaa; line-height: 1.6; }
+.counter {
+  font-size: 48px;
+  font-weight: bold;
+  margin: 30px 0;
+  color: #fff;
+}
+button {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  border: 9px solid #710000;
+  background: radial-gradient(circle at 35% 30%, #ff5555, #d00000 60%, #710000);
+  color: white;
+  font-size: 27px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0 35px #e0000055, inset 0 0 20px #ff999955;
+}
+button:active { transform: scale(.96); }
+button:disabled { opacity: .6; cursor: wait; }
+#status { min-height: 28px; margin-top: 25px; }
+footer { margin-top: 45px; color: #666; font-size: 12px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>EL BOTÓN DEL MUNDO</h1>
+  <p>Un botón. Un mundo.<br>¿Cuántas veces será pulsado?</p>
 
-let total = Number(localStorage.getItem("pulsaciones") || 0);
+  <div class="counter" id="counter">...</div>
+  <p>PULSACIONES MUNDIALES</p>
 
-function updateCounter() {
-  document.getElementById("counter").textContent =
-    String(total).padStart(6, "0");
+  <button id="worldButton">PULSAR</button>
+
+  <p id="status">Conectando con el mundo...</p>
+  <footer>UNA PULSACIÓN PUEDE CAMBIARLO TODO</footer>
+</main>
+
+<script>
+const SUPABASE_URL = "https://xrzieypcxrjmcecpudik.supabase.co/rest/v1/";
+const SUPABASE_KEY = "sb_publishable_zLdp9mnVh_UaIY1QKl6HLw_UbFLL6zV";
+
+const counter = document.getElementById("counter");
+const button = document.getElementById("worldButton");
+const statusText = document.getElementById("status");
+
+async function supabaseRequest(functionName) {
+  const response = await fetch(
+    `${SUPABASE_URL}/rest/v1/rpc/${functionName}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": SUPABASE_KEY,
+        "Authorization": `Bearer ${SUPABASE_KEY}`
+      },
+      body: "{}"
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Error de conexión: " + response.status);
+  }
+
+  return await response.json();
 }
 
-function pressButton() {
-  total++;
-  localStorage.setItem("pulsaciones", total);
-
-  const randomMessage =
-    messages[Math.floor(Math.random() * messages.length)];
-
-  document.getElementById("message").textContent = randomMessage;
-
-  updateCounter();
+async function loadCounter() {
+  try {
+    const total = await supabaseRequest("get_counter");
+    counter.textContent = Number(total).toLocaleString("es-ES");
+    statusText.textContent = "Contador mundial conectado";
+  } catch (error) {
+    statusText.textContent = "No se pudo conectar. Revisa la configuración.";
+    console.error(error);
+  }
 }
 
-updateCounter();
+button.addEventListener("click", async () => {
+  button.disabled = true;
+  statusText.textContent = "Registrando tu pulsación...";
+
+  try {
+    const total = await supabaseRequest("increment_counter");
+    counter.textContent = Number(total).toLocaleString("es-ES");
+    statusText.textContent = "¡Tu pulsación cuenta para todo el mundo!";
+  } catch (error) {
+    statusText.textContent = "No se pudo registrar. Inténtalo de nuevo.";
+    console.error(error);
+  } finally {
+    button.disabled = false;
+  }
+});
+
+loadCounter();
 </script>
 </body>
 </html>
+
