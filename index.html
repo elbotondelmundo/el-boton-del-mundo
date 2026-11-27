@@ -61,69 +61,6 @@ footer { margin-top: 45px; color: #666; font-size: 12px; }
 </main>
 
 <script>
-const SUPABASE_URL = "
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>El Botón del Mundo</title>
-<style>
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: radial-gradient(circle, #252525, #080808 70%);
-  color: white;
-  font-family: Arial, sans-serif;
-  text-align: center;
-  padding: 20px;
-}
-main { max-width: 500px; width: 100%; }
-h1 { font-size: 36px; letter-spacing: 2px; }
-p { color: #aaa; line-height: 1.6; }
-.counter {
-  font-size: 48px;
-  font-weight: bold;
-  margin: 30px 0;
-  color: #fff;
-}
-button {
-  width: 220px;
-  height: 220px;
-  border-radius: 50%;
-  border: 9px solid #710000;
-  background: radial-gradient(circle at 35% 30%, #ff5555, #d00000 60%, #710000);
-  color: white;
-  font-size: 27px;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 0 35px #e0000055, inset 0 0 20px #ff999955;
-}
-button:active { transform: scale(.96); }
-button:disabled { opacity: .6; cursor: wait; }
-#status { min-height: 28px; margin-top: 25px; }
-footer { margin-top: 45px; color: #666; font-size: 12px; }
-</style>
-</head>
-<body>
-<main>
-  <h1>EL BOTÓN DEL MUNDO</h1>
-  <p>Un botón. Un mundo.<br>¿Cuántas veces será pulsado?</p>
-
-  <div class="counter" id="counter">...</div>
-  <p>PULSACIONES MUNDIALES</p>
-
-  <button id="worldButton">PULSAR</button>
-
-  <p id="status">Conectando con el mundo...</p>
-  <footer>UNA PULSACIÓN PUEDE CAMBIARLO TODO</footer>
-</main>
-
-<script>
 const SUPABASE_URL = "https://xrzieypcxrjmcecpudik.supabase.co";
 const SUPABASE_KEY = "sb_publishable_zLdp9mnVh_UaIY1QKl6HLw_UbFLL6zV";
 
