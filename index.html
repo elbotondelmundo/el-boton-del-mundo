@@ -120,6 +120,39 @@ button.addEventListener("click", async () => {
 });
 
 loadCounter();
+  const realtime = new WebSocket(
+  "wss://xrzieypcxrjmcecpudik.supabase.co/realtime/v1/websocket?apikey=" +
+  encodeURIComponent(SUPABASE_KEY) +
+  "&vsn=1.0.0"
+);
+
+realtime.onopen = () => {
+  realtime.send(JSON.stringify({
+    topic: "realtime:public:world_counter",
+    event: "phx_join",
+    payload: {
+      config: {
+        broadcast: { self: false },
+        presence: { key: "" },
+        postgres_changes: [
+          {
+            event: "UPDATE",
+            schema: "public",
+            table: "world_counter"
+          }
+        ]
+      }
+    },
+    ref: "1"
+  }));
+};
+
+realtime.onmessage = (message) => {
+  const data = JSON.parse(message.data);
+  if (data.event === "postgres_changes") {
+    loadCounter();
+  }
+};
 </script>
 </body>
 </html>
