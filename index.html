@@ -71,7 +71,9 @@ const supabase = window.supabase.createClient(
 const counter = document.getElementById("counter");
 const button = document.getElementById("worldButton");
 const statusText = document.getElementById("status");
-statusText.textContent = "JAVASCRIPT FUNCIONA";
+statusText.textContent = window.supabase
+  ? "SUPABASE CARGADO"
+  : "ERROR: SUPABASE NO CARGADO";
 
 async function supabaseRequest(functionName) {
   const response = await fetch(
