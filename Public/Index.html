@@ -1,0 +1,285 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Botón del Mundo</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle, #252525, #080808 70%);
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 20px;
+}
+
+main {
+  max-width: 500px;
+  width: 100%;
+}
+
+h1 {
+  font-size: 36px;
+  letter-spacing: 2px;
+}
+
+p {
+  color: #aaa;
+  line-height: 1.6;
+}
+
+.counter {
+  font-size: 48px;
+  font-weight: bold;
+  margin: 30px 0;
+  color: #fff;
+}
+
+button {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  border: 9px solid #710000;
+  background: radial-gradient(
+    circle at 35% 30%,
+    #ff5555,
+    #d00000 60%,
+    #710000
+  );
+  color: white;
+  font-size: 27px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0 35px #e0000055,
+              inset 0 0 20px #ff999955;
+}
+
+button:active {
+  transform: scale(.96);
+}
+
+button:disabled {
+  opacity: .6;
+  cursor: wait;
+}
+
+#status {
+  min-height: 28px;
+  margin-top: 25px;
+}
+
+footer {
+  margin-top: 45px;
+  color: #666;
+  font-size: 12px;
+}
+</style>
+</head>
+
+<body>
+
+<main>
+  <h1>EL BOTÓN DEL MUNDO</h1>
+
+  <p>
+    Un botón. Un mundo.<br>
+    ¿Cuántas veces será pulsado?
+  </p>
+
+  <div class="counter" id="counter">...</div>
+
+  <p>PULSACIONES MUNDIALES</p>
+
+  <p>PERSONAS CONECTADAS</p>
+<div class="counter" id="onlineCount">0</div>
+  <button id="worldButton">PULSAR</button>
+
+  <p id="status">Conectando con el mundo...</p>
+
+  <footer>UNA PULSACIÓN PUEDE CAMBIARLO TODO</footer>
+</main>
+
+<script type="module">
+
+import { createClient } from
+  "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+// CONFIGURACIÓN DE SUPABASE
+
+const SUPABASE_URL =
+  "https://xrzieypcxrjmcecpudik.supabase.co";
+
+// IMPORTANTE: sustituye el texto por tu clave pública real.
+const SUPABASE_KEY = "sb_publishable_zLdp9mnVh_UaIY1QKl6HLw_UbFLL6zV";
+
+const supabase = createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+// ELEMENTOS DE LA WEB
+
+const counter = document.getElementById("counter");
+const button = document.getElementById("worldButton");
+const statusText = document.getElementById("status");
+
+// CONSULTA A SUPABASE
+
+async function supabaseRequest(functionName) {
+
+  const response = await fetch(
+    `${SUPABASE_URL}/rest/v1/rpc/${functionName}`,
+    {
+      method: "POST",
+      signal: AbortSignal.timeout(10000),
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": SUPABASE_KEY,
+        "Authorization": `Bearer ${SUPABASE_KEY}`
+      },
+      body: "{}"
+    }
+  );
+
+  if (!response.ok) {
+    const errorText = await response.text();
+
+    throw new Error(
+      "Error " + response.status + ": " + errorText
+    );
+  }
+
+  return await response.json();
+}
+
+// CARGAR CONTADOR
+
+async function loadCounter() {
+
+  try {
+
+    const total = await supabaseRequest("get_counter");
+
+    counter.textContent =
+      Number(total).toLocaleString("es-ES");
+
+    statusText.textContent = "Contador mundial conectado";
+
+  } catch (error) {
+
+    statusText.textContent =
+      "No se pudo conectar. Revisa la configuración.";
+
+    console.error("Error al cargar contador:", error);
+  }
+}
+
+// ACTIVAR ACTUALIZACIONES EN TIEMPO REAL
+
+supabase
+  .channel("world-counter-updates")
+  .on(
+    "postgres_changes",
+    {
+      event: "*",
+      schema: "public",
+      table: "world_counter"
+    },
+    () => {
+      loadCounter();
+    }
+  )
+  .subscribe((status) => {
+
+    if (status === "SUBSCRIBED") {
+      console.log("Conexión Realtime activa");
+    }
+
+    if (status === "CHANNEL_ERROR") {
+      console.error("Error en conexión Realtime");
+    }
+
+    if (status === "TIMED_OUT") {
+      console.error("Tiempo de conexión agotado");
+    }
+  });
+
+// REGISTRAR PULSACIÓN
+
+button.addEventListener("click", async () => {
+
+  button.disabled = true;
+
+  statusText.textContent =
+    "Registrando tu pulsación...";
+
+  try {
+
+    const total = await supabaseRequest("increment_counter");
+
+    counter.textContent =
+      Number(total).toLocaleString("es-ES");
+
+    statusText.textContent =
+      "¡Tu pulsación cuenta para todo el mundo!";
+
+  } catch (error) {
+
+    statusText.textContent =
+      "No se pudo registrar. Inténtalo de nuevo.";
+
+    console.error("Error al registrar pulsación:", error);
+
+  } finally {
+
+    button.disabled = false;
+  }
+});
+
+// INICIAR CONTADOR
+
+loadCounter();
+
+  
+// CONTADOR DE PERSONAS CONECTADAS
+
+const onlineChannel = supabase.channel("online-users", {
+  config: {
+    presence: {
+      key: crypto.randomUUID()
+    }
+  }
+});
+
+onlineChannel
+  .on("presence", { event: "sync" }, () => {
+    const presenceState = onlineChannel.presenceState();
+
+    const totalOnline = Object.keys(presenceState).length;
+
+    document.getElementById("onlineCount").textContent =
+      totalOnline.toLocaleString("es-ES");
+  })
+  .subscribe(async (status) => {
+    if (status === "SUBSCRIBED") {
+      await onlineChannel.track({
+        online_at: new Date().toISOString()
+      });
+    }
+  });
+  
+</script>
+
+</body>
+</html>
