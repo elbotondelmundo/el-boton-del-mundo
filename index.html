@@ -101,6 +101,8 @@ footer {
 
   <p>PULSACIONES MUNDIALES</p>
 
+  <p>PERSONAS CONECTADAS</p>
+<div class="counter" id="onlineCount">0</div>
   <button id="worldButton">PULSAR</button>
 
   <p id="status">Conectando con el mundo...</p>
@@ -249,6 +251,34 @@ button.addEventListener("click", async () => {
 
 loadCounter();
 
+  
+// CONTADOR DE PERSONAS CONECTADAS
+
+const onlineChannel = supabase.channel("online-users", {
+  config: {
+    presence: {
+      key: crypto.randomUUID()
+    }
+  }
+});
+
+onlineChannel
+  .on("presence", { event: "sync" }, () => {
+    const presenceState = onlineChannel.presenceState();
+
+    const totalOnline = Object.keys(presenceState).length;
+
+    document.getElementById("onlineCount").textContent =
+      totalOnline.toLocaleString("es-ES");
+  })
+  .subscribe(async (status) => {
+    if (status === "SUBSCRIBED") {
+      await onlineChannel.track({
+        online_at: new Date().toISOString()
+      });
+    }
+  });
+  
 </script>
 
 </body>
